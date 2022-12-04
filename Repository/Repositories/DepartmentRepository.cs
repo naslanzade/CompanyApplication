@@ -1,11 +1,7 @@
 ﻿using Domain.Entities;
 using Repository.Data;
 using Repository.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Repository.Repositories
 {
@@ -24,12 +20,12 @@ namespace Repository.Repositories
 
         public Department Get(Predicate<Department> predicate)
         {
-            throw new NotImplementedException();
+            return AppDbContext<Department>.datas.Find(predicate);
         }
 
-        public List<Department> GetAll(Predicate<Department> predicate)
+        public List<Department> GetAll(Predicate<Department> predicate=null)
         {
-            throw new NotImplementedException();
+            return predicate==null ? AppDbContext<Department>.datas:AppDbContext<Department>.datas.FindAll(predicate);
         }
 
         public void Update(Department entity)

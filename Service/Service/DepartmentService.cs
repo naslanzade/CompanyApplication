@@ -37,12 +37,13 @@ namespace Service.Service
             throw new NotImplementedException();
         }
 
-        public Department GetDepartmentById(int? id)
+        public Department GetById(int? id)
         {
-            throw new NotImplementedException();
+            if (id is null) throw new ArgumentNullException();
+            return _repo.Get(m => m.Id == id);
         }
 
-        public Department GetDepartmentByName(string name)
+        public Department GetByName(string name)
         {
             throw new NotImplementedException();
         }

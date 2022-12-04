@@ -1,11 +1,7 @@
 ﻿using Domain.Entities;
 using Service.Helpers;
 using Service.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace CompanyApplication.Controller
 {
@@ -29,7 +25,6 @@ namespace CompanyApplication.Controller
                     ConsoleColor.Red.WriteConsole("Department name can not be empty:");
                     goto DepName;
                 }
-
 
                 ConsoleColor.Blue.WriteConsole("Please add department capacity:");
                 Capacity: string capacityStr = Console.ReadLine();
@@ -59,14 +54,42 @@ namespace CompanyApplication.Controller
                 ConsoleColor.Red.WriteConsole(ex.Message);
             }
 
+        }
 
 
 
+        public void GetById()
+        {
+            try
+            {
+                ConsoleColor.Blue.WriteConsole("Please add department Id:");
+                Id: string idStr=Console.ReadLine();
+                int id;
+                bool isParseId=int.TryParse(idStr, out id);
+                if (isParseId)
+                {
+                    var result = _departmentService.GetById(id);
+                    if (result is null )
+                    {
+                        ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
+                        goto Id;
+                    }
+
+                    ConsoleColor.Green.WriteConsole($"Id: {result.Id}, Name: {result.Name}, Seat count: {result.Capacity}");
+                }
+                else
+                {
+                    ConsoleColor.Red.WriteConsole("Please add correct id:");
+                    goto Id;
+                }                             
 
 
+            }
+            catch (Exception ex)
+            {
+                ConsoleColor.Red.WriteConsole(ex.Message);
 
-
-
+            }
         }
     }
 }

@@ -23,14 +23,18 @@ while (true)
             case 1:
                 departmentController.Create();
                 break;
+            case 2:
+                departmentController.GetById();
+                break;
+
             default:
-                Console.WriteLine("Select again true option:");
+                ConsoleColor.Red.WriteConsole("Select again true option:");
                 goto SelectOption;                          
         }
     }
     else
     {
-        Console.WriteLine("Select again true option:");
+        ConsoleColor.Red.WriteConsole("Select again true option:");
         goto SelectOption;
     }
 
@@ -74,5 +78,5 @@ while (true)
 static void GetMenus()
 {
     ConsoleColor.DarkCyan.WriteConsole("Select one option:");
-    ConsoleColor.Blue.WriteConsole("Department options: 1 - Create");
+    ConsoleColor.Blue.WriteConsole("Department options: 1 - Create, 2 - Get By Id");
 }
