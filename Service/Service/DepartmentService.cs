@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Repository.Exceptions;
 using Repository.Repositories;
 using Service.Service.Interface;
 
@@ -29,7 +30,12 @@ namespace Service.Service
 
         public void Delete(int? id)
         {
-            throw new NotImplementedException();
+            if (id is null) throw new ArgumentNullException();
+            Department department=GetById(id);
+
+            if (department is null) throw new NotFoundExceptions("Not Found.Please try again");
+
+            _repo.Delete(department);
         }
 
         public List<Department> GetAll()

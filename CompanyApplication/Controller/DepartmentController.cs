@@ -18,7 +18,7 @@ namespace CompanyApplication.Controller
         {
             try
             {
-                ConsoleColor.Blue.WriteConsole("Please add department name:");
+                ConsoleColor.Magenta.WriteConsole("Please add department name:");
                 DepName: string name = Console.ReadLine();
                 if (name is "")
                 {
@@ -26,7 +26,7 @@ namespace CompanyApplication.Controller
                     goto DepName;
                 }
 
-                ConsoleColor.Blue.WriteConsole("Please add department capacity:");
+                ConsoleColor.Magenta.WriteConsole("Please add department capacity:");
                 Capacity: string capacityStr = Console.ReadLine();
                 int capacity;
                 bool isPareseCapacity=int.TryParse(capacityStr, out capacity);
@@ -62,7 +62,7 @@ namespace CompanyApplication.Controller
         {
             try
             {
-                ConsoleColor.Blue.WriteConsole("Please add department Id:");
+                ConsoleColor.Magenta.WriteConsole("Please add department Id:");
                 Id: string idStr=Console.ReadLine();
                 int id;
                 bool isParseId=int.TryParse(idStr, out id);
@@ -91,5 +91,44 @@ namespace CompanyApplication.Controller
 
             }
         }
+
+
+
+        public void Delete()
+        {
+            ConsoleColor.Magenta.WriteConsole("Please add department Id:");
+            Id: string idStr = Console.ReadLine();
+
+            try
+            {
+                int id;
+
+                bool isParseId = int.TryParse(idStr, out id);
+
+                if (isParseId)
+                {
+                    _departmentService.Delete(id);
+
+                    ConsoleColor.Green.WriteConsole($"Successfully deleted");
+                }
+                else
+                {
+                    ConsoleColor.Red.WriteConsole("Please add correct id:");
+                    goto Id;
+                }
+            }
+            catch (Exception ex)
+            {
+                ConsoleColor.Red.WriteConsole(ex.Message);
+                goto Id;
+
+            }
+
+        }
+
+
+
+
+
     }
 }

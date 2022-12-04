@@ -15,7 +15,8 @@ namespace Repository.Repositories
 
         public void Delete(Department entity)
         {
-            throw new NotImplementedException();
+            if(entity == null) throw new ArgumentNullException();
+            AppDbContext<Department>.datas.Remove(entity);
         }
 
         public Department Get(Predicate<Department> predicate)
