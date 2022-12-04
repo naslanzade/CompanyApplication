@@ -31,7 +31,7 @@ while (true)
                 break;
             default:
                 ConsoleColor.Red.WriteConsole("Please select correct option:");
-                goto SelectOption;                          
+                goto SelectOption;                         
         }
     }
     else

@@ -59,9 +59,12 @@ namespace Service.Service
             throw new NotImplementedException();
         }
 
-        public Department Update(Department department)
+        public Department Update(int? id, Department department)
         {
+
             throw new NotImplementedException();
+
+
         }
     }
 }

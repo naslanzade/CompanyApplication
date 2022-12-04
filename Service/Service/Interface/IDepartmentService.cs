@@ -6,7 +6,7 @@ namespace Service.Service.Interface
     public interface IDepartmentService
     {
         Department Create(Department department);
-        Department Update(Department department);
+        Department Update(int ? id,Department department);
         void Delete(int ? id);
         Department GetById(int ? id);
         Department GetByName(string name);
