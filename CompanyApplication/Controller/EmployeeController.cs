@@ -54,12 +54,16 @@ namespace CompanyApplication.Controller
                 bool isParseAge=int.TryParse(ageStr, out age);
                 if (isParseAge && age>=18)
                 {
+
+                    Department department= new();
+
                     Employee employee = new()
                     {
-                      Name = name,
-                      Surname = surname,
-                      Address = address,
-                      Age = age,
+                        Name = name,
+                        Surname = surname,
+                        Address = address,
+                        Age = age,
+                        Department = department
                     };
 
                  var result = _employeeService.Create(employee);
@@ -253,7 +257,20 @@ namespace CompanyApplication.Controller
         }
 
 
+        public void Search()
+        {
+            ConsoleColor.Magenta.WriteConsole("Please add employee name or surname:");
 
+            string searchText = Console.ReadLine();
+
+            var result = _employeeService.Search(searchText);
+            if (result is null) throw new ArgumentNullException();
+            foreach (var item in result)
+            {
+                ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department}");
+            }
+
+        }
 
 
 

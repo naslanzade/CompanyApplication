@@ -74,7 +74,8 @@ namespace Service.Service
 
         public List<Employee> Search(string searchText)
         {
-            return _repo.GetAll(m => m.Name.ToLower().Contains(searchText.ToLower()));
+            if (searchText is null) throw new ArgumentNullException();
+            return _repo.GetAll(m => m.Name.ToLower().Contains(searchText.ToLower()) ||m.Surname.ToLower().Contains(searchText.ToLower()));
             
         }
 

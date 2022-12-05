@@ -30,6 +30,7 @@ namespace Repository.Repositories
 
         public List<Employee> GetAll(Predicate<Employee> predicate=null)
         {
+
             return predicate == null ? AppDbContext<Employee>.datas : AppDbContext<Employee>.datas.FindAll(predicate);
         }
 

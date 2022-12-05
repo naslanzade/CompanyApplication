@@ -15,5 +15,6 @@ namespace Domain.Entities
         public string Address { get; set; }
         public Department Department { get; set; }
 
+        
     }
 }
