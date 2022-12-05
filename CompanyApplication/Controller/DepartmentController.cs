@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Service.Helpers;
 using Service.Service;
-
+using System.Diagnostics.CodeAnalysis;
 
 namespace CompanyApplication.Controller
 {
@@ -75,7 +75,7 @@ namespace CompanyApplication.Controller
                         goto Id;
                     }
 
-                    ConsoleColor.Green.WriteConsole($"Id: {result.Id}, Name: {result.Name}, Seat count: {result.Capacity}");
+                    ConsoleColor.Green.WriteConsole($"Id: {result.Id},Department Name: {result.Name}, Department Capacity: {result.Capacity}");
                 }
                 else
                 {
@@ -125,6 +125,120 @@ namespace CompanyApplication.Controller
             }
 
         }
+
+
+
+        public void Search()
+        {
+            ConsoleColor.Magenta.WriteConsole("Please add department name:");
+
+            string searchText=Console.ReadLine();
+
+            var result=_departmentService.Search(searchText);
+            foreach (var item in result)
+            {
+                ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Department Name:{item.Name}, Department Capacity:{item.Capacity}");
+            }
+
+        }
+
+
+
+
+        public void GetAll()
+        {
+            try
+            {
+                ConsoleColor.Magenta.WriteConsole("Please add department Id:");
+                Id: string idStr = Console.ReadLine();
+                int id;
+                bool isParseId = int.TryParse(idStr, out id);
+                if (isParseId)
+                {
+                    var result = _departmentService.GetAll();
+                    if (result is null)
+                    {
+                        ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
+                        goto Id;
+                    }
+                    else
+                    {
+                        foreach (var item in result)
+                        {
+                            ConsoleColor.Green.WriteConsole($"Id: {item.Id}, Department Name: {item.Name}, Department Capacity: {item.Capacity}");
+                        }
+                    }                                       
+                }
+                else
+                {
+                    ConsoleColor.Red.WriteConsole("Please add correct id:");
+                    goto Id;
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                ConsoleColor.Red.WriteConsole(ex.Message);
+
+            }
+
+
+
+
+        }
+
+
+
+        public void Update()
+        {
+
+            try
+            {
+                ConsoleColor.Magenta.WriteConsole("Please add department Id:");
+                Id: string idStr = Console.ReadLine();
+                int id;
+                bool isParseId = int.TryParse(idStr, out id);
+                if (isParseId)
+                {
+                    var result = _departmentService.GetById(id);
+                    if (result is null)
+                    {
+                        ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
+                        goto Id;
+                    }
+                    ConsoleColor.DarkMagenta.WriteConsole("Please add new department name:");
+
+                    result = _departmentService.Update(id, result);
+                    
+                    
+                    ConsoleColor.Green.WriteConsole($"Id:{result.Id},Department Name:{result.Name},Department Capacity:{result.Capacity}");
+
+
+
+
+                }
+                else
+                {
+                    ConsoleColor.Red.WriteConsole("Please add correct id:");
+                    goto Id;
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                ConsoleColor.Red.WriteConsole(ex.Message);
+
+            }
+
+
+
+
+
+        }
+
+
 
 
 

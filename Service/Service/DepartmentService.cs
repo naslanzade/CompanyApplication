@@ -40,7 +40,9 @@ namespace Service.Service
 
         public List<Department> GetAll()
         {
-            throw new NotImplementedException();
+           
+            return _repo.GetAll();
+
         }
 
         public Department GetById(int? id)
@@ -49,20 +51,28 @@ namespace Service.Service
             return _repo.Get(m => m.Id == id);
         }
 
-        public Department GetByName(string name)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<Department> Search(string searchText)
         {
-            throw new NotImplementedException();
+            return _repo.GetAll(m => m.Name.ToLower().Contains(searchText.ToLower()));
         }
 
         public Department Update(int? id, Department department)
-        {
+        {        
 
-            throw new NotImplementedException();
+            if (department.Id == null)
+            {
+                throw new NotFoundExceptions("Not Found.Please try again");
+            }
+            else
+            {
+                department.Name.Replace(department.Name, newValue: department.Name);
+                _repo.Update(department);
+
+            }
+            return department;
+
+           
+            
 
 
         }

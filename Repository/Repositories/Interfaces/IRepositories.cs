@@ -10,7 +10,7 @@ namespace Repository.Repositories.Interfaces
         void Delete(T entity); 
         T Get(Predicate<T> predicate);
         List<T> GetAll(Predicate<T> predicate);
-
+       
 
     }
 }

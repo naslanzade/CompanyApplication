@@ -3,6 +3,7 @@ using CompanyApplication.Controller;
 using Service.Helpers;
 
 DepartmentController departmentController= new DepartmentController();
+EmployeeController employeeController = new EmployeeController();
 
 
 
@@ -29,6 +30,31 @@ while (true)
             case 3:
                 departmentController.Delete();
                 break;
+            case 4:
+                departmentController.Search();
+                break;
+            case 5:
+                departmentController.GetAll();
+                break;
+            case 6:
+                departmentController.Update();
+                break;
+                case 7:
+                employeeController.Create();
+                break;
+            case 8:
+                employeeController.GetById();
+                break;
+            case 9:
+                employeeController.Delete();
+                break;
+            case 10:
+                employeeController.GetEmployeesByAge();
+                break;
+            case 11:
+                employeeController.GetAllCount();
+                break;
+
             default:
                 ConsoleColor.Red.WriteConsole("Please select correct option:");
                 goto SelectOption;                         
@@ -52,33 +78,11 @@ while (true)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 static void GetMenus()
 {
     ConsoleColor.Blue.WriteConsole("Select one option:");
-    ConsoleColor.Blue.WriteConsole("Department options: 1 - Create, 2 - Get By Id, 3 - Delete");
+    Console.WriteLine("...................");
+    ConsoleColor.Blue.WriteConsole("Department options: 1 - Create, 2 - Get By Id, 3 - Delete, 4 - Search, 5 - Get All Departments, 6 - Update");
+    Console.WriteLine("...................");
+    ConsoleColor.Blue.WriteConsole("Employee options:7-Create, 8- Get employee by id, 9 - Delete, 10 -  Get employees by age, 11 - Get all emloyees count");
 }

@@ -9,8 +9,7 @@ namespace Service.Service.Interface
         Department Update(int ? id,Department department);
         void Delete(int ? id);
         Department GetById(int ? id);
-        Department GetByName(string name);
-        List<Department> GetAll();
+       List<Department> GetAll();
         List<Department> Search(string searchText);
 
 

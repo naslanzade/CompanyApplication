@@ -7,6 +7,7 @@ namespace Repository.Repositories
 {
     public class DepartmentRepository : IRepositories<Department>
     {
+        
         public void Add(Department entity)
         {
             if (entity == null) throw new ArgumentNullException();
@@ -29,14 +30,14 @@ namespace Repository.Repositories
             return predicate==null ? AppDbContext<Department>.datas:AppDbContext<Department>.datas.FindAll(predicate);
         }
 
+       
         public void Update(Department entity)
         {
             if (entity == null) throw new ArgumentNullException();
-            AppDbContext<Department>.datas.Find(m=> m.Id == entity.Id);
-            
-
-
-
+            AppDbContext<Department>.datas.Find(m => m.Id == entity.Id);
+               
         }
+
+
     }
 }
