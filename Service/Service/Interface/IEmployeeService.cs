@@ -15,7 +15,7 @@ namespace Service.Service.Interface
         Employee GetById(int ? id);
         void Delete(int ? id);
         List<Employee> GetByAge(int? age);
-        Employee GetByDepartmentId(int? departmentId);
+        List<Employee> GetByDepartmentId(int? departmentId);
         List<Employee> GetAllbyDepartmentName(string searchText);
         List<Employee> Search(string searchText);
         List<Employee> GetAllCount(int  id);

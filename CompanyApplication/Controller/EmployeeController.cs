@@ -185,9 +185,7 @@ namespace CompanyApplication.Controller
                     foreach (var item in result)
                     {
                         ConsoleColor.Green.WriteConsole($"Id: {item.Id},Name: {item.Name}, Surname: {item.Surname},Address:{item.Address},Age:{item.Age},Departement:{item.Department.Id}");
-                    }
-
-                    
+                    }                   
                 }
                 else
                 {
@@ -257,16 +255,25 @@ namespace CompanyApplication.Controller
 
         public void Search()
         {
-            ConsoleColor.Magenta.WriteConsole("Please add employee name or surname:");
-
-            string searchText = Console.ReadLine();
-
-            var result = _employeeService.Search(searchText);
-            if (result is null) throw new ArgumentNullException();
-            foreach (var item in result)
+            try
             {
-                ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
+                ConsoleColor.Magenta.WriteConsole("Please add employee name or surname:");
+
+                string searchText = Console.ReadLine();
+
+                var result = _employeeService.Search(searchText);
+                if (result is null) throw new ArgumentNullException();
+                foreach (var item in result)
+                {
+                    ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
+                }
             }
+            catch (Exception ex)
+            {
+
+                ConsoleColor.Red.WriteConsole(ex.Message);
+            }
+            
 
         }
 
@@ -274,20 +281,67 @@ namespace CompanyApplication.Controller
 
         public void GetEmployeesByDepartmentName()
         {
-            ConsoleColor.Magenta.WriteConsole("Please enter department name");
-            string depName= Console.ReadLine();
-
-            var result=_employeeService.GetAllbyDepartmentName(depName);
-            if (result is null) throw new ArgumentException();
+            try
             {
+                ConsoleColor.Magenta.WriteConsole("Please enter department name");
+                string depName = Console.ReadLine();
+
+                var result = _employeeService.GetAllbyDepartmentName(depName);
+
+                if (result is null)
+                {
+
+                    throw new ArgumentException();
+                }
                 foreach (var item in result)
                 {
                     ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
                 }
             }
+            catch (Exception ex)
+            {
+
+                ConsoleColor.Red.WriteConsole(ex.Message);
+            }
+            
+            
         }
 
 
+
+        public void GetEmployeesByDepartmentId()
+        {
+            try
+            {
+                ConsoleColor.Magenta.WriteConsole("Please enter department Id");
+                Id: string depIdStr = Console.ReadLine();
+                int depId;
+                bool isParseDepId = int.TryParse(depIdStr, out depId);
+
+                var result=_employeeService.GetByDepartmentId(depId);
+                if (isParseDepId == null)
+                {
+                    ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
+                    goto Id;
+                }
+                foreach (var item in result)
+                {
+                   ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                ConsoleColor.Red.WriteConsole(ex.Message);
+            }
+
+
+
+
+
+
+
+        }
 
 
 

@@ -62,9 +62,10 @@ namespace Service.Service
             return _repo.GetAll(m => m.Age == age);
         }
 
-        public Employee GetByDepartmentId(int? departmentId)
+        public List<Employee> GetByDepartmentId(int? departmentId)
         {
-            throw new NotImplementedException();
+            if (departmentId == null) throw new ArgumentNullException();
+            return _repo.GetAll(m=>m.Department.Id== departmentId);            
         }
 
         public Employee GetById(int? id)
