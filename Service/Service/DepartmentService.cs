@@ -65,8 +65,7 @@ namespace Service.Service
             }
             else
             {
-                department.Name.Replace(department.Name, newValue: department.Name);
-                _repo.Update(department);
+               _repo.Update(department);
 
             }
             return department;

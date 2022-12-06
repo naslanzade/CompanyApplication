@@ -214,9 +214,6 @@ namespace CompanyApplication.Controller
                     
                     ConsoleColor.Green.WriteConsole($"Id:{result.Id},Department Name:{result.Name},Department Capacity:{result.Capacity}");
 
-
-
-
                 }
                 else
                 {

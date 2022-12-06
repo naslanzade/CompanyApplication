@@ -13,9 +13,12 @@ namespace CompanyApplication.Controller
     public class EmployeeController
     {
         private readonly EmployeeService _employeeService;
+        private readonly DepartmentService _departmentService;
+
         public EmployeeController()
         {
             _employeeService= new EmployeeService();
+            _departmentService= new DepartmentService();
         }
 
         public void Create()
@@ -45,29 +48,37 @@ namespace CompanyApplication.Controller
                     ConsoleColor.Red.WriteConsole("Address can not be empty");
                     goto EmpAddress;
                 }
-                             
+                ConsoleColor.Magenta.WriteConsole("Add employee department you want to add employee:");
+                DepartmentId: string DepartmentidStr = Console.ReadLine();
+                int DepartmentId;
+                bool isParseId = int.TryParse(DepartmentidStr, out DepartmentId);
+                if (isParseId)
+                {
+                    var result = _departmentService.GetById(DepartmentId);
+                    if (result is null)
+                    {
+                        ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
+                        goto DepartmentId;
+                    }
 
                 ConsoleColor.Magenta.WriteConsole("Add employee age");
                 EmpAge: string ageStr =Console.ReadLine();
-                int age;
-                
+                int age;                
                 bool isParseAge=int.TryParse(ageStr, out age);
                 if (isParseAge && age>=18)
                 {
-
-                    Department department= new();
-
+                                        
                     Employee employee = new()
                     {
                         Name = name,
                         Surname = surname,
                         Address = address,
                         Age = age,
-                        Department = department
+                        Department = _departmentService.GetById(DepartmentId)
                     };
 
-                 var result = _employeeService.Create(employee);
-                 ConsoleColor.Green.WriteConsole($"Id:{employee.Id},Name:{employee.Name},Surname:{employee.Surname},Address:{employee.Address},Age:{employee.Age},Department:{result.Department}");
+                  _employeeService.Create(employee);
+                 ConsoleColor.Green.WriteConsole($"Id:{employee.Id},Name:{employee.Name},Surname:{employee.Surname},Address:{employee.Address},Age:{employee.Age},Department:{employee.Department.Id}");
                  
                 }
                 else
@@ -77,31 +88,12 @@ namespace CompanyApplication.Controller
                 }
 
             }
+            }
             catch (Exception ex)
             {
 
                 ConsoleColor.Red.WriteConsole(ex.Message);
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         }
 
