@@ -169,7 +169,7 @@ namespace CompanyApplication.Controller
         {
             try
             {
-                ConsoleColor.Magenta.WriteConsole("Please add employee age:");
+                ConsoleColor.Magenta.WriteConsole("Please enter employee age:");
                 Age: string idStr = Console.ReadLine();
                 int age;
                 bool isParseAge = int.TryParse(idStr, out age);
@@ -181,11 +181,17 @@ namespace CompanyApplication.Controller
                         ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
                         goto Age;
                     }
-                    ConsoleColor.Green.WriteConsole($"Id: {result.Id},Name: {result.Name}, Surname: {result.Surname},Address:{result.Address},Age:{result.Age},Departement:{result.Department}");
+
+                    foreach (var item in result)
+                    {
+                        ConsoleColor.Green.WriteConsole($"Id: {item.Id},Name: {item.Name}, Surname: {item.Surname},Address:{item.Address},Age:{item.Age},Departement:{item.Department.Id}");
+                    }
+
+                    
                 }
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("Please add correct id:");
+                    ConsoleColor.Red.WriteConsole("Please enter correct id:");
                     goto Age;
                 }
 
@@ -259,14 +265,27 @@ namespace CompanyApplication.Controller
             if (result is null) throw new ArgumentNullException();
             foreach (var item in result)
             {
-                ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department}");
+                ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
             }
 
         }
 
 
 
+        public void GetEmployeesByDepartmentName()
+        {
+            ConsoleColor.Magenta.WriteConsole("Please enter department name");
+            string depName= Console.ReadLine();
 
+            var result=_employeeService.GetAllbyDepartmentName(depName);
+            if (result is null) throw new ArgumentException();
+            {
+                foreach (var item in result)
+                {
+                    ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
+                }
+            }
+        }
 
 
 

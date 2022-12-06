@@ -38,9 +38,10 @@ namespace Service.Service
             _repo.Delete(employee);
         }
 
-        public List<Employee> GetAllbyDepartmentName()
+        public List<Employee> GetAllbyDepartmentName(string searchText)
         {
-            throw new NotImplementedException();
+            if (searchText == null) throw new ArgumentNullException();
+            return _repo.GetAll(m=>m.Department.Name.ToLower().Contains(searchText.ToLower()));
         }
 
         public List<Employee> GetAllCount(int id)
@@ -55,10 +56,10 @@ namespace Service.Service
             return _repo.GetAll();
         }
 
-        public Employee GetByAge(int? age)
+        public List<Employee> GetByAge(int? age)
         {
             if (age is null) throw new ArgumentNullException();
-            return _repo.Get(m => m.Age == age);
+            return _repo.GetAll(m => m.Age == age);
         }
 
         public Employee GetByDepartmentId(int? departmentId)

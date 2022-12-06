@@ -57,6 +57,9 @@ while (true)
             case 12:
                 employeeController.Search();
                 break;
+            case 13:
+                employeeController.GetEmployeesByDepartmentName();
+                break;
 
             default:
                 ConsoleColor.Red.WriteConsole("Please select correct option:");
@@ -87,5 +90,5 @@ static void GetMenus()
     Console.WriteLine("...................");
     ConsoleColor.Blue.WriteConsole("Department options: 1 - Create, 2 - Get By Id, 3 - Delete, 4 - Search, 5 - Get All Departments, 6 - Update");
     Console.WriteLine("...................");
-    ConsoleColor.Blue.WriteConsole("Employee options:7-Create, 8- Get employee by id, 9 - Delete, 10 -  Get employees by age, 11 - Get all emloyees count,12 - Search,");
+    ConsoleColor.Blue.WriteConsole("Employee options:7-Create, 8- Get employee by id, 9 - Delete, 10 -  Get employees by age, 11 - Get all emloyees count,12 - Search,13 - Get all employees  by departmentName");
 }

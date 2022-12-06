@@ -2,6 +2,7 @@
 using Service.Helpers;
 using Service.Service;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml.Linq;
 
 namespace CompanyApplication.Controller
 {
@@ -195,24 +196,33 @@ namespace CompanyApplication.Controller
 
             try
             {
-                ConsoleColor.Magenta.WriteConsole("Please add department Id:");
+                ConsoleColor.Magenta.WriteConsole("Please enter department Id:");
                 Id: string idStr = Console.ReadLine();
-                int id;
-                bool isParseId = int.TryParse(idStr, out id);
-                if (isParseId)
-                {
-                    var result = _departmentService.GetById(id);
-                    if (result is null)
-                    {
-                        ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
-                        goto Id;
-                    }
-                    ConsoleColor.DarkMagenta.WriteConsole("Please add new department name:");
+                int newId;
+                bool isParseDepId = int.TryParse(idStr, out newId);
 
-                    result = _departmentService.Update(id, result);
-                    
-                    
-                    ConsoleColor.Green.WriteConsole($"Id:{result.Id},Department Name:{result.Name},Department Capacity:{result.Capacity}");
+                ConsoleColor.Magenta.WriteConsole("Please enter new name of department :");
+                string name = Console.ReadLine();
+
+                ConsoleColor.Magenta.WriteConsole("Please enter new capacity of department :");
+                string updCapacityStr = Console.ReadLine();
+                int newUpdCapacity;
+                bool isParseUpdCapacity = int.TryParse(updCapacityStr, out newUpdCapacity);
+
+                if (isParseDepId)
+                {
+                    if (isParseUpdCapacity)
+                    {
+                        Department department = new()
+                        {
+                            Name=name,
+                            Capacity=newUpdCapacity
+                        };
+
+                        var result = _departmentService.Update(newId, department);
+                        if (result is null) throw new ArgumentNullException();
+                        ConsoleColor.Green.WriteConsole("Successfully updated");
+                    }                  
 
                 }
                 else

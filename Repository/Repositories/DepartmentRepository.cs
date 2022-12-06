@@ -31,10 +31,9 @@ namespace Repository.Repositories
         }
 
        
-        public void Update(Department entity)
+        public List<Department> Update(Department entity)
         {
-            if (entity == null) throw new ArgumentNullException();
-            AppDbContext<Department>.datas.Find(m => m.Id == entity.Id);
+            return AppDbContext<Department>.datas;
                
         }
 
