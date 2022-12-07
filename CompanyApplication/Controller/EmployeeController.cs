@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Repository.Data;
 using Service.Helpers;
 using Service.Service;
 using Service.Service.Interface;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace CompanyApplication.Controller
@@ -25,69 +27,80 @@ namespace CompanyApplication.Controller
         {
             try
             {
-                ConsoleColor.Magenta.WriteConsole("Add employee name:");
-                EmpName: string name =Console.ReadLine();
-                if (name is "")
-                {
-                    ConsoleColor.Red.WriteConsole("Name can not be empty");
-                    goto EmpName;
-                }
 
-                ConsoleColor.Magenta.WriteConsole("Add employee surname:");
-                EmpSurname: string surname =Console.ReadLine();
-                if (surname is "")
+                if (AppDbContext<Department>.datas.Count!=0)
                 {
-                    ConsoleColor.Red.WriteConsole("Surname can not be empty");
-                    goto EmpSurname;
-                }
-
-                ConsoleColor.Magenta.WriteConsole("Add employee address:");
-                EmpAddress: string address =Console.ReadLine();
-                if (address is "")
-                {
-                    ConsoleColor.Red.WriteConsole("Address can not be empty");
-                    goto EmpAddress;
-                }
-                ConsoleColor.Magenta.WriteConsole("Add employee department you want to add employee:");
-                DepartmentId: string DepartmentidStr = Console.ReadLine();
-                int DepartmentId;
-                bool isParseId = int.TryParse(DepartmentidStr, out DepartmentId);
-                if (isParseId)
-                {
-                    var result = _departmentService.GetById(DepartmentId);
-                    if (result is null)
+                    ConsoleColor.Magenta.WriteConsole("Add employee name:");
+                    EmpName: string name = Console.ReadLine();
+                    if (name is "")
                     {
-                        ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
-                        goto DepartmentId;
+                        ConsoleColor.Red.WriteConsole("Name can not be empty");
+                        goto EmpName;
                     }
 
-                ConsoleColor.Magenta.WriteConsole("Add employee age");
-                EmpAge: string ageStr =Console.ReadLine();
-                int age;                
-                bool isParseAge=int.TryParse(ageStr, out age);
-                if (isParseAge && age>=18)
-                {
-                                        
-                    Employee employee = new()
+                    ConsoleColor.Magenta.WriteConsole("Add employee surname:");
+                    EmpSurname: string surname = Console.ReadLine();
+                    if (surname is "")
                     {
-                        Name = name,
-                        Surname = surname,
-                        Address = address,
-                        Age = age,
-                        Department = _departmentService.GetById(DepartmentId)
-                    };
+                        ConsoleColor.Red.WriteConsole("Surname can not be empty");
+                        goto EmpSurname;
+                    }
 
-                  _employeeService.Create(employee);
-                 ConsoleColor.Green.WriteConsole($"Id:{employee.Id},Name:{employee.Name},Surname:{employee.Surname},Address:{employee.Address},Age:{employee.Age},Department:{employee.Department.Id}");
-                 
+                    ConsoleColor.Magenta.WriteConsole("Add employee address:");
+                    EmpAddress: string address = Console.ReadLine();
+                    if (address is "")
+                    {
+                        ConsoleColor.Red.WriteConsole("Address can not be empty");
+                        goto EmpAddress;
+                    }
+                    ConsoleColor.Magenta.WriteConsole("Add employee department you want to add employee:");
+                    DepartmentId: string DepartmentidStr = Console.ReadLine();
+                    int DepartmentId;
+                    bool isParseId = int.TryParse(DepartmentidStr, out DepartmentId);
+                    if (isParseId)
+                    {
+                        var result = _departmentService.GetById(DepartmentId);
+                        if (result is null)
+                        {
+                            ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
+                            goto DepartmentId;
+                        }
+
+                        ConsoleColor.Magenta.WriteConsole("Add employee age");
+                        EmpAge: string ageStr = Console.ReadLine();
+                        int age;
+                        bool isParseAge = int.TryParse(ageStr, out age);
+                        if (isParseAge && age >= 18)
+                        {
+
+                            Employee employee = new()
+                            {
+                                Name = name,
+                                Surname = surname,
+                                Address = address,
+                                Age = age,
+                                Department = _departmentService.GetById(DepartmentId)
+                            };
+
+                            _employeeService.Create(employee);
+                            ConsoleColor.Green.WriteConsole($"Id:{employee.Id},Name:{employee.Name},Surname:{employee.Surname},Address:{employee.Address},Age:{employee.Age},Department:{employee.Department.Id}");
+
+                        }
+                        else
+                        {
+                            ConsoleColor.Red.WriteConsole("Add correct age");
+                            goto EmpAge;
+                        }
+
+                    }
+
                 }
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("Add correct age");
-                    goto EmpAge;
-                }
+                    ConsoleColor.Red.WriteConsole("You can no add employee");
 
-            }
+                }
+                
             }
             catch (Exception ex)
             {

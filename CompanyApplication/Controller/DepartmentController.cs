@@ -193,44 +193,42 @@ namespace CompanyApplication.Controller
 
         public void Update()
         {
-
+            
             try
             {
                 ConsoleColor.Magenta.WriteConsole("Please enter department Id:");
-                Id: string idStr = Console.ReadLine();
-                int newId;
-                bool isParseDepId = int.TryParse(idStr, out newId);
+                string depIdStr=Console.ReadLine();
+                int depId;
+                bool isParseDepId=int.TryParse(depIdStr,out depId);
+                if (isParseDepId)
+                {
+                    ConsoleColor.Red.WriteConsole("Please add correct id:");
+                }
 
                 ConsoleColor.Magenta.WriteConsole("Please enter new name of department :");
-                string name = Console.ReadLine();
+                string newname = Console.ReadLine();
 
                 ConsoleColor.Magenta.WriteConsole("Please enter new capacity of department :");
-                string updCapacityStr = Console.ReadLine();
+                Capacity: string updCapacityStr = Console.ReadLine();
                 int newUpdCapacity;
                 bool isParseUpdCapacity = int.TryParse(updCapacityStr, out newUpdCapacity);
 
-                if (isParseDepId)
+                if (isParseUpdCapacity)
                 {
-                    if (isParseUpdCapacity)
-                    {
-                        Department department = new()
-                        {
-                            Name=name,
-                            Capacity=newUpdCapacity
-                        };
-
-                        var result = _departmentService.Update(newId, department);
-                        if (result is null) throw new ArgumentNullException();
-                        ConsoleColor.Green.WriteConsole("Successfully updated");
-                    }                  
-
+                    ConsoleColor.Red.WriteConsole("Please add correct capacity:");
+                    goto Capacity;
                 }
-                else
+                _departmentService.GetById(depId).Name = newname;
+                _departmentService.GetById(depId).Capacity = newUpdCapacity;
+
+                Department department = new()
                 {
-                    ConsoleColor.Red.WriteConsole("Please add correct id:");
-                    goto Id;
-                }
+                    Name= newname,
+                    Capacity= newUpdCapacity
+                };
 
+                _departmentService.Update(department);
+                ConsoleColor.Green.WriteConsole($"Id:{department.Id},new name:{department.Name},new capacity:{department.Capacity}");
 
             }
             catch (Exception ex)

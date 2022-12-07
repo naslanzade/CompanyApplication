@@ -56,29 +56,10 @@ namespace Service.Service
             return _repo.GetAll(m => m.Name.ToLower().Contains(searchText.ToLower()));
         }
 
-        public List<Department> Update(int? id, Department department)
+        public Department Update(Department department)
         {
-
-            var result = _repo.Update(department);
-            foreach (var item in result)
-            {
-                if (department.Id==id)
-                {
-                    item.Name = department.Name;
-                    item.Capacity = department.Capacity;
-
-                }
-                else
-                {
-                    throw new NotFoundExceptions("Not found");
-                }
-            }
-            return result;
-
-           
-            
-
-
+            _repo.Update(department);
+            return department;
         }
     }
 }

@@ -7,6 +7,8 @@ namespace Repository.Repositories
 {
     public class DepartmentRepository : IRepositories<Department>
     {
+        Department department = new();
+
         
         public void Add(Department entity)
         {
@@ -31,9 +33,13 @@ namespace Repository.Repositories
         }
 
        
-        public List<Department> Update(Department entity)
+        public void Update(Department entity)
         {
-            return AppDbContext<Department>.datas;
+
+            if (entity == null) throw new ArgumentNullException();
+
+            entity.Name = department.Name;
+            entity.Capacity = department.Capacity;
                
         }
 

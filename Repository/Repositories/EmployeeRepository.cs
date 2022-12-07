@@ -34,7 +34,7 @@ namespace Repository.Repositories
             return predicate == null ? AppDbContext<Employee>.datas : AppDbContext<Employee>.datas.FindAll(predicate);
         }
 
-        public List<Employee> Update(Employee entity)
+        public void Update(Employee entity)
         {
             throw new NotImplementedException();
         }
