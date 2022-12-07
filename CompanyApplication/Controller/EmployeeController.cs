@@ -32,7 +32,8 @@ namespace CompanyApplication.Controller
                 {
                     ConsoleColor.Magenta.WriteConsole("Add employee name:");
                     EmpName: string name = Console.ReadLine();
-                    if (name is "")
+                    Regex regex = new Regex(@"[A-za-z]");
+                    if (name is "" && !regex.IsMatch(name))
                     {
                         ConsoleColor.Red.WriteConsole("Name can not be empty");
                         goto EmpName;
@@ -91,14 +92,11 @@ namespace CompanyApplication.Controller
                             ConsoleColor.Red.WriteConsole("Add correct age");
                             goto EmpAge;
                         }
-
                     }
-
                 }
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("You can no add employee");
-
+                    ConsoleColor.Red.WriteConsole("You can not create employee");
                 }
                 
             }
@@ -115,26 +113,40 @@ namespace CompanyApplication.Controller
         {
             try
             {
-                ConsoleColor.Magenta.WriteConsole("Please add employee Id:");
-                Id: string idStr = Console.ReadLine();
-                int id;
-                bool isParseId = int.TryParse(idStr, out id);
-                if (isParseId)
+                if (AppDbContext<Department>.datas.Count != 0)
                 {
-                    var result = _employeeService.GetById(id);
-                    if (result is null)
+                    if (AppDbContext<Employee>.datas.Count!=0)
                     {
-                        ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
-                        goto Id;
+                        ConsoleColor.Magenta.WriteConsole("Please add employee Id:");
+                        Id: string idStr = Console.ReadLine();
+                        int id;
+                        bool isParseId = int.TryParse(idStr, out id);
+                        if (isParseId)
+                        {
+                            var result = _employeeService.GetById(id);
+                            if (result is null)
+                            {
+                                ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
+                                goto Id;
+                            }
+                            ConsoleColor.Green.WriteConsole($"Id: {result.Id},Name: {result.Name}, Surname: {result.Surname},Address:{result.Address},Age:{result.Age},Departement:{result.Department}");
+                        }
+                        else
+                        {
+                            ConsoleColor.Red.WriteConsole("Please add correct id:");
+                            goto Id;
+                        }
                     }
-                    ConsoleColor.Green.WriteConsole($"Id: {result.Id},Name: {result.Name}, Surname: {result.Surname},Address:{result.Address},Age:{result.Age},Departement:{result.Department}");
+                    else
+                    {
+                        ConsoleColor.Red.WriteConsole("You can not get employee by ID");
+                    }
+                 
                 }
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("Please add correct id:");
-                    goto Id;
+                    ConsoleColor.Red.WriteConsole("You can not get employee by ID");
                 }
-
 
             }
             catch (Exception ex)
@@ -147,33 +159,50 @@ namespace CompanyApplication.Controller
 
         public void Delete()
         {
-            ConsoleColor.Magenta.WriteConsole("Please add employee Id:");
-            Id: string idStr = Console.ReadLine();
-
-            try
+            if (AppDbContext<Department>.datas.Count != 0)
             {
-                int id;
-
-                bool isParseId = int.TryParse(idStr, out id);
-
-                if (isParseId)
+                if (AppDbContext<Employee>.datas.Count != 0)
                 {
-                    _employeeService.Delete(id);
+                    ConsoleColor.Magenta.WriteConsole("Please add employee Id:");
+                    Id: string idStr = Console.ReadLine();
 
-                    ConsoleColor.Green.WriteConsole($"Successfully deleted");
+                    try
+                    {
+                        int id;
+
+                        bool isParseId = int.TryParse(idStr, out id);
+
+                        if (isParseId)
+                        {
+                            _employeeService.Delete(id);
+
+                            ConsoleColor.Green.WriteConsole($"Successfully deleted");
+                        }
+                        else
+                        {
+                            ConsoleColor.Red.WriteConsole("Please add correct id:");
+                            goto Id;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ConsoleColor.Red.WriteConsole(ex.Message);
+                        goto Id;
+
+                    }
                 }
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("Please add correct id:");
-                    goto Id;
+                    ConsoleColor.Red.WriteConsole("You can not delete employee");
                 }
+            
             }
-            catch (Exception ex)
+            else
             {
-                ConsoleColor.Red.WriteConsole(ex.Message);
-                goto Id;
-
+                ConsoleColor.Red.WriteConsole("You can not delete employee");
             }
+
+                
         }
 
 
@@ -182,30 +211,46 @@ namespace CompanyApplication.Controller
         {
             try
             {
-                ConsoleColor.Magenta.WriteConsole("Please enter employee age:");
-                Age: string idStr = Console.ReadLine();
-                int age;
-                bool isParseAge = int.TryParse(idStr, out age);
-                if (isParseAge)
+                if (AppDbContext<Department>.datas.Count != 0)
                 {
-                    var result = _employeeService.GetByAge(age);
-                    if (result is null)
+                    if (AppDbContext<Employee>.datas.Count != 0)
                     {
-                        ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
-                        goto Age;
+                        ConsoleColor.Magenta.WriteConsole("Please enter employee age:");
+                        Age: string idStr = Console.ReadLine();
+                        int age;
+                        bool isParseAge = int.TryParse(idStr, out age);
+                        if (isParseAge)
+                        {
+                            var result = _employeeService.GetByAge(age);
+                            if (result is null)
+                            {
+                                ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
+                                goto Age;
+                            }                            
+                            foreach (var item in result)
+                            {
+                               
+                             ConsoleColor.Green.WriteConsole($"Id: {item.Id},Name: {item.Name}, Surname: {item.Surname},Address:{item.Address},Age:{item.Age},Departement:{item.Department.Id}");
+                                
+                            }
+                        }
+                        else
+                        {
+                            ConsoleColor.Red.WriteConsole("Please enter correct age:");
+                            goto Age;
+                        }
                     }
-
-                    foreach (var item in result)
+                    else
                     {
-                        ConsoleColor.Green.WriteConsole($"Id: {item.Id},Name: {item.Name}, Surname: {item.Surname},Address:{item.Address},Age:{item.Age},Departement:{item.Department.Id}");
-                    }                   
+                        ConsoleColor.Red.WriteConsole("You can not get employee by age");
+                    }
+                   
+
                 }
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("Please enter correct id:");
-                    goto Age;
+                    ConsoleColor.Red.WriteConsole("You can not get employee by age");
                 }
-
 
             }
             catch (Exception ex)
@@ -221,26 +266,40 @@ namespace CompanyApplication.Controller
 
             try
             {
-                ConsoleColor.Magenta.WriteConsole("Please add employee Id:");
-                Id: string idStr = Console.ReadLine();
-                int id;
-                bool isParseId = int.TryParse(idStr, out id);
-                if (isParseId)
+                if (AppDbContext<Department>.datas.Count != 0)
                 {
-                    var result = _employeeService.GetAllCount(id);
-                    if (result is null)
+                    if (AppDbContext<Employee>.datas.Count != 0)
                     {
-                        ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
-                        goto Id;
+                        ConsoleColor.Magenta.WriteConsole("Please add employee Id:");
+                        Id: string idStr = Console.ReadLine();
+                        int id;
+                        bool isParseId = int.TryParse(idStr, out id);
+                        if (isParseId)
+                        {
+                            var result = _employeeService.GetAllCount(id);
+                            if (result is null)
+                            {
+                                ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
+                                goto Id;
+                            }
+                            ConsoleColor.Green.WriteConsole($"Count: {result.Count}");
+                        }
+                        else
+                        {
+                            ConsoleColor.Red.WriteConsole("Please add correct id:");
+                            goto Id;
+                        }
                     }
-                    ConsoleColor.Green.WriteConsole($"Count: {result.Count}");
+                    else
+                    {
+                        ConsoleColor.Red.WriteConsole("You can not get all count of employees");
+                    }
+                    
                 }
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("Please add correct id:");
-                    goto Id;
+                    ConsoleColor.Red.WriteConsole("You can not get all count of employees");
                 }
-
 
             }
             catch (Exception ex)
@@ -270,16 +329,33 @@ namespace CompanyApplication.Controller
         {
             try
             {
-                ConsoleColor.Magenta.WriteConsole("Please add employee name or surname:");
-
-                string searchText = Console.ReadLine();
-
-                var result = _employeeService.Search(searchText);
-                if (result is null) throw new ArgumentNullException();
-                foreach (var item in result)
+                if (AppDbContext<Department>.datas.Count != 0)
                 {
-                    ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
+                    if (AppDbContext<Employee>.datas.Count != 0)
+                    {
+                        ConsoleColor.Magenta.WriteConsole("Please add employee name or surname:");
+
+                        string searchText = Console.ReadLine();
+
+                        var result = _employeeService.Search(searchText);
+                        if (result is null) throw new ArgumentNullException();
+                        foreach (var item in result)
+                        {
+                            ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
+                        }
+                    }
+                    else
+                    {
+                        ConsoleColor.Red.WriteConsole("You can not search");
+                    }
+                   
                 }
+                else
+                {
+                    ConsoleColor.Red.WriteConsole("You can not search");
+                }
+
+
             }
             catch (Exception ex)
             {
@@ -296,20 +372,36 @@ namespace CompanyApplication.Controller
         {
             try
             {
-                ConsoleColor.Magenta.WriteConsole("Please enter department name");
-                string depName = Console.ReadLine();
-
-                var result = _employeeService.GetAllbyDepartmentName(depName);
-
-                if (result is null)
+                if (AppDbContext<Department>.datas.Count != 0)
                 {
+                    if (AppDbContext<Employee>.datas.Count != 0)
+                    {
+                        ConsoleColor.Magenta.WriteConsole("Please enter department name");
+                        DepName: string depName = Console.ReadLine();
 
-                    throw new ArgumentException();
+                        var result = _employeeService.GetAllbyDepartmentName(depName);
+                        if (result is null)
+                        {
+                            ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
+                            goto DepName;
+                        }
+                        foreach (var item in result)
+                        {
+                            ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
+                        }
+
+                    }
+                    else
+                    {
+                        ConsoleColor.Red.WriteConsole("You can not get employees by department name");
+                    }
+                    
                 }
-                foreach (var item in result)
+                else
                 {
-                    ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
+                    ConsoleColor.Red.WriteConsole("You can not get employees by department name");
                 }
+
             }
             catch (Exception ex)
             {
@@ -326,21 +418,37 @@ namespace CompanyApplication.Controller
         {
             try
             {
-                ConsoleColor.Magenta.WriteConsole("Please enter department Id");
-                Id: string depIdStr = Console.ReadLine();
-                int depId;
-                bool isParseDepId = int.TryParse(depIdStr, out depId);
+                if (AppDbContext<Department>.datas.Count != 0)
+                {
+                    if (AppDbContext<Employee>.datas.Count != 0)
+                    {
+                        ConsoleColor.Magenta.WriteConsole("Please enter department Id");
+                        Id: string depIdStr = Console.ReadLine();
+                        int depId;
+                        bool isParseDepId = int.TryParse(depIdStr, out depId);
 
-                var result=_employeeService.GetByDepartmentId(depId);
-                if (isParseDepId == null)
-                {
-                    ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
-                    goto Id;
+                        var result = _employeeService.GetByDepartmentId(depId);
+                        if (isParseDepId == null)
+                        {
+                            ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
+                            goto Id;
+                        }
+                        foreach (var item in result)
+                        {
+                            ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
+                        }
+                    }
+                    else
+                    {
+                        ConsoleColor.Red.WriteConsole("You can not get employees by department Id");
+                    }
+                    
                 }
-                foreach (var item in result)
+                else
                 {
-                   ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
+                    ConsoleColor.Red.WriteConsole("You can not get employees by department Id");
                 }
+
             }
             catch (Exception ex)
             {
