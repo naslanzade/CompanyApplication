@@ -1,7 +1,10 @@
 ﻿using Domain.Entities;
+using Repository.Data;
 using Service.Helpers;
 using Service.Service;
+using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace CompanyApplication.Controller
@@ -21,9 +24,15 @@ namespace CompanyApplication.Controller
             {
                 ConsoleColor.Magenta.WriteConsole("Please add department name:");
                 DepName: string name = Console.ReadLine();
-                if (name is "")
+                if (name is "" || name==null)
                 {
                     ConsoleColor.Red.WriteConsole("Department name can not be empty:");
+                    goto DepName;
+                }
+                Regex regex = new Regex(@"^[A-z ,.'-A-Za-z]+$");
+                if (!regex.IsMatch(name))
+                {
+                    ConsoleColor.Red.WriteConsole("Please try again");
                     goto DepName;
                 }
 
@@ -63,28 +72,34 @@ namespace CompanyApplication.Controller
         {
             try
             {
-                ConsoleColor.Magenta.WriteConsole("Please add department Id:");
-                Id: string idStr=Console.ReadLine();
-                int id;
-                bool isParseId=int.TryParse(idStr, out id);
-                if (isParseId)
+                if (AppDbContext<Department>.datas.Count != 0)
                 {
-                    var result = _departmentService.GetById(id);
-                    if (result is null )
+                    ConsoleColor.Magenta.WriteConsole("Please add department Id:");
+                    Id: string idStr = Console.ReadLine();
+                    int id;
+                    bool isParseId = int.TryParse(idStr, out id);
+                    if (isParseId)
                     {
-                        ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
+                        var result = _departmentService.GetById(id);
+                        if (result is null)
+                        {
+                            ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
+                            goto Id;
+                        }
+
+                        ConsoleColor.Green.WriteConsole($"Id: {result.Id},Department Name: {result.Name}, Department Capacity: {result.Capacity}");
+                    }
+                    else
+                    {
+                        ConsoleColor.Red.WriteConsole("Please add correct id:");
                         goto Id;
                     }
-
-                    ConsoleColor.Green.WriteConsole($"Id: {result.Id},Department Name: {result.Name}, Department Capacity: {result.Capacity}");
                 }
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("Please add correct id:");
-                    goto Id;
-                }                             
-
-
+                    ConsoleColor.Red.WriteConsole("Please create department");
+                }
+               
             }
             catch (Exception ex)
             {
@@ -97,33 +112,43 @@ namespace CompanyApplication.Controller
 
         public void Delete()
         {
-            ConsoleColor.Magenta.WriteConsole("Please add department Id:");
-            Id: string idStr = Console.ReadLine();
-
-            try
+            if (AppDbContext<Department>.datas.Count != 0)
             {
-                int id;
-
-                bool isParseId = int.TryParse(idStr, out id);
-
-                if (isParseId)
+               ConsoleColor.Magenta.WriteConsole("Please add department Id:");
+               Id: string idStr = Console.ReadLine();
+                try
                 {
-                    _departmentService.Delete(id);
+                    int id;
 
-                    ConsoleColor.Green.WriteConsole($"Successfully deleted");
+                    bool isParseId = int.TryParse(idStr, out id);
+
+                    if (isParseId)
+                    {
+                        _departmentService.Delete(id);
+
+                        ConsoleColor.Green.WriteConsole($"Successfully deleted");
+                    }
+                    else
+                    {
+                        ConsoleColor.Red.WriteConsole("Please add correct id:");
+                        goto Id;
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    ConsoleColor.Red.WriteConsole("Please add correct id:");
+                    ConsoleColor.Red.WriteConsole(ex.Message);
                     goto Id;
+
                 }
-            }
-            catch (Exception ex)
-            {
-                ConsoleColor.Red.WriteConsole(ex.Message);
-                goto Id;
 
             }
+            else
+            {
+                ConsoleColor.Red.WriteConsole("Please create department");
+            }
+            
+
+            
 
         }
 
@@ -131,16 +156,47 @@ namespace CompanyApplication.Controller
 
         public void Search()
         {
-            ConsoleColor.Magenta.WriteConsole("Please add department name:");
-
-            string searchText=Console.ReadLine();
-
-            var result=_departmentService.Search(searchText);
-            foreach (var item in result)
+            try
             {
-                ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Department Name:{item.Name}, Department Capacity:{item.Capacity}");
-            }
+                if (AppDbContext<Department>.datas.Count != 0)
+                {
+                    ConsoleColor.Magenta.WriteConsole("Please add department name:");
 
+                    string searchText = Console.ReadLine();
+                    if (searchText != null || searchText != string.Empty)
+                    {
+                        var result = _departmentService.Search(searchText);
+                        if (result.Count != 0)
+                        {
+                            foreach (var item in result)
+                            {
+                                ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Department Name:{item.Name}, Department Capacity:{item.Capacity}");
+                            }
+                        }
+                        else
+                        {
+                            ConsoleColor.Red.WriteConsole("Not found.Please try again");
+                        }
+                    }
+
+                    else
+                    {
+                        ConsoleColor.Red.WriteConsole("Not found.Please try again");
+                    }
+
+                }
+                else
+                {
+                    ConsoleColor.Red.WriteConsole("Please create department");
+                }
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
 
@@ -148,41 +204,50 @@ namespace CompanyApplication.Controller
 
         public void GetAll()
         {
-            try
+            if (AppDbContext<Department>.datas.Count != 0)
             {
-                ConsoleColor.Magenta.WriteConsole("Please add department Id:");
-                Id: string idStr = Console.ReadLine();
-                int id;
-                bool isParseId = int.TryParse(idStr, out id);
-                if (isParseId)
+                try
                 {
-                    var result = _departmentService.GetAll();
-                    if (result is null)
+
+                    ConsoleColor.Magenta.WriteConsole("Please add department Id:");
+                    Id: string idStr = Console.ReadLine();
+                    int id;
+                    bool isParseId = int.TryParse(idStr, out id);
+                    if (isParseId)
                     {
-                        ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
-                        goto Id;
+                        var result = _departmentService.GetAll();
+                        if (result is null)
+                        {
+                            ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
+                            goto Id;
+                        }
+                        else
+                        {
+                            foreach (var item in result)
+                            {
+                                ConsoleColor.Green.WriteConsole($"Id: {item.Id}, Department Name: {item.Name}, Department Capacity: {item.Capacity}");
+                            }
+                        }
                     }
                     else
                     {
-                        foreach (var item in result)
-                        {
-                            ConsoleColor.Green.WriteConsole($"Id: {item.Id}, Department Name: {item.Name}, Department Capacity: {item.Capacity}");
-                        }
-                    }                                       
+                        ConsoleColor.Red.WriteConsole("Please add correct id:");
+                        goto Id;
+                    }
+
+
                 }
-                else
+                catch (Exception ex)
                 {
-                    ConsoleColor.Red.WriteConsole("Please add correct id:");
-                    goto Id;
+                    ConsoleColor.Red.WriteConsole(ex.Message);
+
                 }
-
-
             }
-            catch (Exception ex)
+            else
             {
-                ConsoleColor.Red.WriteConsole(ex.Message);
-
+                ConsoleColor.Red.WriteConsole("Please create department");
             }
+            
 
 
 
@@ -193,49 +258,56 @@ namespace CompanyApplication.Controller
 
         public void Update()
         {
-            
-            try
+            if (AppDbContext<Department>.datas.Count!=0)
             {
-                ConsoleColor.Magenta.WriteConsole("Please enter department Id:");
-                string depIdStr=Console.ReadLine();
-                int depId;
-                bool isParseDepId=int.TryParse(depIdStr,out depId);
-                if (isParseDepId)
+                try
                 {
-                    ConsoleColor.Red.WriteConsole("Please add correct id:");
+                    ConsoleColor.Magenta.WriteConsole("Please enter department Id:");
+                    Id: string depIdStr = Console.ReadLine();
+                    int depId;
+                    bool isParseDepId = int.TryParse(depIdStr, out depId);
+                    if (!isParseDepId)
+                    {
+                        ConsoleColor.Red.WriteConsole("Please add correct id:");
+                        goto Id;
+                    }
+
+                    ConsoleColor.Magenta.WriteConsole("Please enter new name of department :");
+                    string newname = Console.ReadLine();
+
+                    ConsoleColor.Magenta.WriteConsole("Please enter new capacity of department :");
+                    Capacity: string updCapacityStr = Console.ReadLine();
+                    int newUpdCapacity;
+                    bool isParseUpdCapacity = int.TryParse(updCapacityStr, out newUpdCapacity);
+
+                    if (!isParseUpdCapacity)
+                    {
+                        ConsoleColor.Red.WriteConsole("Please add correct capacity:");
+                        goto Capacity;
+                    }             
+                  
+                    Department newdepartment = new()
+
+                    {
+                        Name = newname,
+                        Capacity = newUpdCapacity
+                    };
+
+                    _departmentService.Update(depId,newdepartment);
+                    ConsoleColor.Green.WriteConsole($"Id:{newdepartment.Id},new name:{newdepartment.Name},new capacity:{newdepartment.Capacity}");
+
                 }
-
-                ConsoleColor.Magenta.WriteConsole("Please enter new name of department :");
-                string newname = Console.ReadLine();
-
-                ConsoleColor.Magenta.WriteConsole("Please enter new capacity of department :");
-                Capacity: string updCapacityStr = Console.ReadLine();
-                int newUpdCapacity;
-                bool isParseUpdCapacity = int.TryParse(updCapacityStr, out newUpdCapacity);
-
-                if (isParseUpdCapacity)
+                catch (Exception ex)
                 {
-                    ConsoleColor.Red.WriteConsole("Please add correct capacity:");
-                    goto Capacity;
+                    ConsoleColor.Red.WriteConsole(ex.Message);
+
                 }
-                _departmentService.GetById(depId).Name = newname;
-                _departmentService.GetById(depId).Capacity = newUpdCapacity;
-
-                Department department = new()
-                {
-                    Name= newname,
-                    Capacity= newUpdCapacity
-                };
-
-                _departmentService.Update(department);
-                ConsoleColor.Green.WriteConsole($"Id:{department.Id},new name:{department.Name},new capacity:{department.Capacity}");
-
             }
-            catch (Exception ex)
+            else
             {
-                ConsoleColor.Red.WriteConsole(ex.Message);
-
+                ConsoleColor.Red.WriteConsole("Please create department");
             }
+           
 
 
 

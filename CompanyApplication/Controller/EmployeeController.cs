@@ -32,10 +32,15 @@ namespace CompanyApplication.Controller
                 {
                     ConsoleColor.Magenta.WriteConsole("Add employee name:");
                     EmpName: string name = Console.ReadLine();
-                    Regex regex = new Regex(@"[A-za-z]");
-                    if (name is "" && !regex.IsMatch(name))
+                    if (name is "" || name is null)
                     {
                         ConsoleColor.Red.WriteConsole("Name can not be empty");
+                        goto EmpName;
+                    }
+                    Regex regex = new Regex(@"^[A-z ,.'-A-Za-z\d]+$");
+                    if (!regex.IsMatch(name))
+                    {
+                        ConsoleColor.Red.WriteConsole("Please try again");
                         goto EmpName;
                     }
 
@@ -44,6 +49,11 @@ namespace CompanyApplication.Controller
                     if (surname is "")
                     {
                         ConsoleColor.Red.WriteConsole("Surname can not be empty");
+                        goto EmpSurname;
+                    }
+                    if (!regex.IsMatch(surname))
+                    {
+                        ConsoleColor.Red.WriteConsole("Please try again");
                         goto EmpSurname;
                     }
 
@@ -66,7 +76,7 @@ namespace CompanyApplication.Controller
                             ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
                             goto DepartmentId;
                         }
-
+                       
                         ConsoleColor.Magenta.WriteConsole("Add employee age");
                         EmpAge: string ageStr = Console.ReadLine();
                         int age;
@@ -226,13 +236,20 @@ namespace CompanyApplication.Controller
                             {
                                 ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
                                 goto Age;
-                            }                            
-                            foreach (var item in result)
-                            {
-                               
-                             ConsoleColor.Green.WriteConsole($"Id: {item.Id},Name: {item.Name}, Surname: {item.Surname},Address:{item.Address},Age:{item.Age},Departement:{item.Department.Id}");
-                                
                             }
+                            if (result.Count!=0)
+                            {
+                                foreach (var item in result)
+                                {
+                                    ConsoleColor.Green.WriteConsole($"Id: {item.Id},Name: {item.Name}, Surname: {item.Surname},Address:{item.Address},Age:{item.Age},Departement:{item.Department.Id}");
+                                }
+                            }
+                            else
+                            {
+                                ConsoleColor.Red.WriteConsole("Not found.Please try again");
+                                goto Age;
+                            }
+                            
                         }
                         else
                         {
@@ -336,25 +353,35 @@ namespace CompanyApplication.Controller
                         ConsoleColor.Magenta.WriteConsole("Please add employee name or surname:");
 
                         string searchText = Console.ReadLine();
-
-                        var result = _employeeService.Search(searchText);
-                        if (result is null) throw new ArgumentNullException();
+                        if (searchText!=null || searchText!=string.Empty)
+                        {
+                         var result = _employeeService.Search(searchText);
+                        if (result.Count!=0)
+                        {
                         foreach (var item in result)
                         {
-                            ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
+                          ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
+                        }
+                        }
+                        else
+                        {
+                           ConsoleColor.Red.WriteConsole("Not found.Please try again");
+                        }
+                        }
+                        else
+                        {
+                            ConsoleColor.Red.WriteConsole("You can not search");
                         }
                     }
                     else
                     {
                         ConsoleColor.Red.WriteConsole("You can not search");
                     }
-                   
                 }
                 else
                 {
                     ConsoleColor.Red.WriteConsole("You can not search");
                 }
-
 
             }
             catch (Exception ex)
@@ -433,10 +460,18 @@ namespace CompanyApplication.Controller
                             ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
                             goto Id;
                         }
-                        foreach (var item in result)
+                        if (result.Count!=0)
                         {
-                            ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
+                            foreach (var item in result)
+                            {
+                                ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
+                            }
                         }
+                        else
+                        {
+                            ConsoleColor.Red.WriteConsole("Not found.Please try again");
+                        }
+                        
                     }
                     else
                     {
@@ -465,7 +500,81 @@ namespace CompanyApplication.Controller
         }
 
 
+        public void Update()
+        {
+            if (AppDbContext<Department>.datas.Count != 0)
+            {
+                try
+                {
+                    if (AppDbContext<Employee>.datas.Count != 0)
+                    {
+                        ConsoleColor.Magenta.WriteConsole("Please enter employee id:");
+                    Id: string empIdStr = Console.ReadLine();
+                        int empId;
+                        bool isParseId = int.TryParse(empIdStr, out empId);
+                        if (!isParseId)
+                        {
+                            ConsoleColor.Red.WriteConsole("Please enter correct id:");
+                            goto Id;
+                        }
+                        ConsoleColor.Magenta.WriteConsole("Please enter new name of employee :");
+                        string newname = Console.ReadLine();
 
+                        ConsoleColor.Magenta.WriteConsole("Please enter new surname of employee :");
+                        string newsurname = Console.ReadLine();
 
+                        ConsoleColor.Magenta.WriteConsole("Please enter new address of employee :");
+                        string newaddress = Console.ReadLine();
+
+                        ConsoleColor.Magenta.WriteConsole("Please enter new age of employee :");
+                    Age: string ageStr = Console.ReadLine();
+                        int newage;
+                        bool isParseAge = int.TryParse(ageStr, out newage);
+                        if (!isParseAge)
+                        {
+                            ConsoleColor.Red.WriteConsole("Please enter correct age:");
+                            goto Age;
+                        }
+                        ConsoleColor.Magenta.WriteConsole("Please enter new Id of employee :");
+                    DepId: string depIdStr = Console.ReadLine();
+                        int newdepId;
+                        bool isParseDepId = int.TryParse(depIdStr, out newdepId);
+                        if (!isParseDepId)
+                        {
+                            ConsoleColor.Red.WriteConsole("Please enter correct age:");
+                            goto DepId;
+                        }
+
+                        Employee newemployee = new()
+                        {
+                            Name = newname,
+                            Surname = newsurname,
+                            Address = newaddress,
+                            Age = newage,
+                            Department = _departmentService.GetById(newdepId)
+
+                        };
+
+                        _employeeService.Update(newdepId, newemployee);
+                        ConsoleColor.Green.WriteConsole($"Id:{newemployee.Id},New Name:{newemployee.Name},New Surname:{newemployee.Surname},New Address:{newemployee.Address},New Age:{newemployee.Age},New DepartmentId:{newemployee.Department.Id}");
+
+                    }
+                    else
+                    {
+                        ConsoleColor.Red.WriteConsole("You can not update employee");
+                    }
+                }
+                    catch (Exception ex) 
+                    {
+                       ConsoleColor.Red.WriteConsole(ex.Message);
+                     }
+                    }
+                    else
+                    {
+                       ConsoleColor.Red.WriteConsole("You can not update employee");
+                    }
+                 }
+                   
+        }
     }
-}
+

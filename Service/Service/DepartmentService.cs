@@ -1,6 +1,8 @@
 ﻿using Domain.Entities;
+using Repository.Data;
 using Repository.Exceptions;
 using Repository.Repositories;
+using Service.Helpers;
 using Service.Service.Interface;
 
 
@@ -53,13 +55,21 @@ namespace Service.Service
 
         public List<Department> Search(string searchText)
         {
+            if (searchText == null || searchText == string.Empty) 
+            {
+                ConsoleColor.Red.WriteConsole("Not found");
+                //throw new ArgumentNullException("error");
+
+            }        
             return _repo.GetAll(m => m.Name.ToLower().Contains(searchText.ToLower()));
         }
 
-        public Department Update(Department department)
+        public Department Update(int  id,Department newDepartment)
         {
-            _repo.Update(department);
-            return department;
+            newDepartment.Id = id;
+            
+            _repo.Update(newDepartment);
+            return newDepartment;
         }
     }
 }

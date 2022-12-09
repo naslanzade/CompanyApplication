@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Repository.Exceptions;
 using Repository.Repositories;
+using Service.Helpers;
 using Service.Service.Interface;
 using System;
 using System.Collections.Generic;
@@ -76,14 +77,20 @@ namespace Service.Service
 
         public List<Employee> Search(string searchText)
         {
-            if (searchText is null) throw new ArgumentNullException();
+            if (searchText == null || searchText == string.Empty)
+            {
+                ConsoleColor.Red.WriteConsole("Not found.Please try again");
+            }
             return _repo.GetAll(m => m.Name.ToLower().Contains(searchText.ToLower()) ||m.Surname.ToLower().Contains(searchText.ToLower()));
             
         }
 
-        public Employee Update(int? id, Employee employee)
+        public Employee Update(int id, Employee newEmployee)
         {
-            throw new NotImplementedException();
+            newEmployee.Id = id;
+
+            _repo.Update(newEmployee);
+            return newEmployee;
         }
     }
 }

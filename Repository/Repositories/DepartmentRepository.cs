@@ -7,9 +7,7 @@ namespace Repository.Repositories
 {
     public class DepartmentRepository : IRepositories<Department>
     {
-        Department department = new();
-
-        
+                
         public void Add(Department entity)
         {
             if (entity == null) throw new ArgumentNullException();
@@ -33,14 +31,15 @@ namespace Repository.Repositories
         }
 
        
-        public void Update(Department entity)
+        public void Update(Department newEntity)
         {
 
-            if (entity == null) throw new ArgumentNullException();
+            if (newEntity == null) throw new ArgumentNullException();
+            Department department=Get(m=>m.Id==newEntity.Id);
+            department.Name = newEntity.Name;
+            department.Capacity = newEntity.Capacity;
+            
 
-            entity.Name = department.Name;
-            entity.Capacity = department.Capacity;
-               
         }
 
 

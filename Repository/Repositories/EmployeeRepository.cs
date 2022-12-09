@@ -34,9 +34,17 @@ namespace Repository.Repositories
             return predicate == null ? AppDbContext<Employee>.datas : AppDbContext<Employee>.datas.FindAll(predicate);
         }
 
-        public void Update(Employee entity)
+        public void Update(Employee newEmployee)
         {
-            throw new NotImplementedException();
+            if (newEmployee == null) throw new ArgumentNullException();
+
+            Employee employee=Get(m=>m.Id==newEmployee.Id);
+            employee.Name = newEmployee.Name;
+            employee.Surname = newEmployee.Surname;
+            employee.Address = newEmployee.Address;
+            employee.Age = newEmployee.Age;
+            employee.Department = newEmployee.Department;
+          
         }
     }
 }

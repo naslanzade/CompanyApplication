@@ -11,7 +11,7 @@ namespace Service.Service.Interface
     {
 
         Employee Create(Employee employee);
-        Employee Update(int ? id,Employee employee);
+        Employee Update(int  id,Employee employee);
         Employee GetById(int ? id);
         void Delete(int ? id);
         List<Employee> GetByAge(int? age);
