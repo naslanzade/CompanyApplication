@@ -44,7 +44,6 @@ namespace Repository.Repositories
                     department1.Capacity = department.Capacity;
 
                 }
-                
             }
             else
             {

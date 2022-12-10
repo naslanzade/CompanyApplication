@@ -193,10 +193,10 @@ namespace CompanyApplication.Controller
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
-                ConsoleColor.Red.WriteConsole(ex.Message);
+                throw;
             }
         }
 

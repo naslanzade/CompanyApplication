@@ -297,7 +297,7 @@ namespace CompanyApplication.Controller
                     if (AppDbContext<Employee>.datas.Count != 0)
                     {
 
-                        ConsoleColor.Green.WriteConsole($"{_employeeService.GetCount()}");
+                        ConsoleColor.Green.WriteConsole($"Count:{_employeeService.GetCount()}");
                     }
                     else
                     {
@@ -344,7 +344,7 @@ namespace CompanyApplication.Controller
                     {
                         ConsoleColor.Magenta.WriteConsole("Please enter employee name or surname:");
 
-                        string searchText = Console.ReadLine();
+                        SearchText: string searchText = Console.ReadLine();
                         if (searchText!=string.Empty)
                         {
                         var result = _employeeService.Search(searchText);
@@ -358,11 +358,13 @@ namespace CompanyApplication.Controller
                         else
                         {
                            ConsoleColor.Red.WriteConsole("Not found.Please try again");
+                                goto SearchText;
                         }
                         }
                         else
                         {
                             ConsoleColor.Red.WriteConsole("Not found.Please try again");
+                            goto SearchText;
                         }
                     }
                     else
@@ -397,18 +399,28 @@ namespace CompanyApplication.Controller
                     {
                         ConsoleColor.Magenta.WriteConsole("Please enter department name");
                         DepName: string depName = Console.ReadLine();
-
-                        var result = _employeeService.GetAllbyDepartmentName(depName);
-                        if (result is null)
+                        if (depName != string.Empty)
+                        {
+                            var result = _employeeService.GetAllbyDepartmentName(depName);
+                            if (result.Count != 0)
+                            {
+                                foreach (var item in result)
+                                {
+                                 ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
+                                }
+                            }
+                            else
+                            {
+                                ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
+                                goto DepName;
+                            }
+                        }
+                        else
                         {
                             ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
                             goto DepName;
-                        }
-                        foreach (var item in result)
-                        {
-                            ConsoleColor.Green.WriteConsole($"Id:{item.Id}, Name:{item.Name}, Surname:{item.Surname}, Address:{item.Address},Age:{item.Age},Department:{item.Department.Id}");
-                        }
 
+                        }
                     }
                     else
                     {
@@ -462,18 +474,19 @@ namespace CompanyApplication.Controller
                         else
                         {
                             ConsoleColor.Red.WriteConsole("Not found.Please try again");
+                            goto Id;
                         }
                         
                     }
                     else
                     {
-                        ConsoleColor.Red.WriteConsole("You can not get employees by department Id");
+                        ConsoleColor.Red.WriteConsole("Please create employee");
                     }
                     
                 }
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("You can not get employees by department Id");
+                    ConsoleColor.Red.WriteConsole("Please create department");
                 }
 
             }
