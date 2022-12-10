@@ -43,7 +43,7 @@ namespace Repository.Repositories
             employee.Surname = newEmployee.Surname;
             employee.Address = newEmployee.Address;
             employee.Age = newEmployee.Age;
-            employee.Department = newEmployee.Department;
+            employee.Department.Id = newEmployee.Department.Id;
           
         }
     }

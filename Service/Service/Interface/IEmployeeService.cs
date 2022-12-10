@@ -18,7 +18,7 @@ namespace Service.Service.Interface
         List<Employee> GetByDepartmentId(int? departmentId);
         List<Employee> GetAllbyDepartmentName(string searchText);
         List<Employee> Search(string searchText);
-        List<Employee> GetAllCount(int  id);
+        int GetCount();
 
 
     }

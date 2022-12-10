@@ -55,12 +55,6 @@ namespace Service.Service
 
         public List<Department> Search(string searchText)
         {
-            if (searchText == null || searchText == string.Empty) 
-            {
-                ConsoleColor.Red.WriteConsole("Not found");
-                //throw new ArgumentNullException("error");
-
-            }        
             return _repo.GetAll(m => m.Name.ToLower().Contains(searchText.ToLower()));
         }
 

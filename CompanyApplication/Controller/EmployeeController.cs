@@ -37,34 +37,36 @@ namespace CompanyApplication.Controller
                         ConsoleColor.Red.WriteConsole("Name can not be empty");
                         goto EmpName;
                     }
-                    Regex regex = new Regex(@"^[A-z ,.'-A-Za-z\d]+$");
+                    Regex regex = new Regex(@"[A-Z]{1}[a-z]*$");
                     if (!regex.IsMatch(name))
                     {
-                        ConsoleColor.Red.WriteConsole("Please try again");
+                        ConsoleColor.Red.WriteConsole("Try again");
                         goto EmpName;
                     }
 
                     ConsoleColor.Magenta.WriteConsole("Add employee surname:");
                     EmpSurname: string surname = Console.ReadLine();
-                    if (surname is "")
+                    if (surname is "" || surname is null)
                     {
                         ConsoleColor.Red.WriteConsole("Surname can not be empty");
                         goto EmpSurname;
                     }
                     if (!regex.IsMatch(surname))
                     {
-                        ConsoleColor.Red.WriteConsole("Please try again");
+                        ConsoleColor.Red.WriteConsole("Try again");
                         goto EmpSurname;
                     }
 
                     ConsoleColor.Magenta.WriteConsole("Add employee address:");
                     EmpAddress: string address = Console.ReadLine();
-                    if (address is "")
+                    if (address is "" || address is null)
                     {
                         ConsoleColor.Red.WriteConsole("Address can not be empty");
                         goto EmpAddress;
                     }
-                    ConsoleColor.Magenta.WriteConsole("Add employee department you want to add employee:");
+                    
+
+                    ConsoleColor.Magenta.WriteConsole("Add department Id you want to add employee:");
                     DepartmentId: string DepartmentidStr = Console.ReadLine();
                     int DepartmentId;
                     bool isParseId = int.TryParse(DepartmentidStr, out DepartmentId);
@@ -76,12 +78,19 @@ namespace CompanyApplication.Controller
                             ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
                             goto DepartmentId;
                         }
+                        var departmentCapacity = _departmentService.GetById(DepartmentId).Capacity;
+                        var employeedepartment = _employeeService.GetByDepartmentId(DepartmentId).Count;
+                        if (departmentCapacity<=employeedepartment)
+                        {
+                            ConsoleColor.Red.WriteConsole("Could not add employee to this department:");
+                            goto DepartmentId;
+                        }
                        
                         ConsoleColor.Magenta.WriteConsole("Add employee age");
                         EmpAge: string ageStr = Console.ReadLine();
                         int age;
                         bool isParseAge = int.TryParse(ageStr, out age);
-                        if (isParseAge && age >= 18)
+                        if (isParseAge && age >= 18 && age<=65)
                         {
 
                             Employee employee = new()
@@ -106,7 +115,7 @@ namespace CompanyApplication.Controller
                 }
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("You can not create employee");
+                    ConsoleColor.Red.WriteConsole("Please create department");
                 }
                 
             }
@@ -127,7 +136,7 @@ namespace CompanyApplication.Controller
                 {
                     if (AppDbContext<Employee>.datas.Count!=0)
                     {
-                        ConsoleColor.Magenta.WriteConsole("Please add employee Id:");
+                        ConsoleColor.Magenta.WriteConsole("Please enter employee Id:");
                         Id: string idStr = Console.ReadLine();
                         int id;
                         bool isParseId = int.TryParse(idStr, out id);
@@ -143,19 +152,19 @@ namespace CompanyApplication.Controller
                         }
                         else
                         {
-                            ConsoleColor.Red.WriteConsole("Please add correct id:");
+                            ConsoleColor.Red.WriteConsole("Please enter correct id:");
                             goto Id;
                         }
                     }
                     else
                     {
-                        ConsoleColor.Red.WriteConsole("You can not get employee by ID");
+                        ConsoleColor.Red.WriteConsole("Please create employee");
                     }
                  
                 }
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("You can not get employee by ID");
+                    ConsoleColor.Red.WriteConsole("Please create department");
                 }
 
             }
@@ -173,7 +182,7 @@ namespace CompanyApplication.Controller
             {
                 if (AppDbContext<Employee>.datas.Count != 0)
                 {
-                    ConsoleColor.Magenta.WriteConsole("Please add employee Id:");
+                    ConsoleColor.Magenta.WriteConsole("Please enter employee Id:");
                     Id: string idStr = Console.ReadLine();
 
                     try
@@ -190,7 +199,7 @@ namespace CompanyApplication.Controller
                         }
                         else
                         {
-                            ConsoleColor.Red.WriteConsole("Please add correct id:");
+                            ConsoleColor.Red.WriteConsole("Please enter correct id:");
                             goto Id;
                         }
                     }
@@ -203,13 +212,13 @@ namespace CompanyApplication.Controller
                 }
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("You can not delete employee");
+                    ConsoleColor.Red.WriteConsole("Please create employee");
                 }
             
             }
             else
             {
-                ConsoleColor.Red.WriteConsole("You can not delete employee");
+                ConsoleColor.Red.WriteConsole("Please create department");
             }
 
                 
@@ -259,14 +268,14 @@ namespace CompanyApplication.Controller
                     }
                     else
                     {
-                        ConsoleColor.Red.WriteConsole("You can not get employee by age");
+                        ConsoleColor.Red.WriteConsole("Please create employee");
                     }
                    
 
                 }
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("You can not get employee by age");
+                    ConsoleColor.Red.WriteConsole("Please create department");
                 }
 
             }
@@ -287,35 +296,18 @@ namespace CompanyApplication.Controller
                 {
                     if (AppDbContext<Employee>.datas.Count != 0)
                     {
-                        ConsoleColor.Magenta.WriteConsole("Please add employee Id:");
-                        Id: string idStr = Console.ReadLine();
-                        int id;
-                        bool isParseId = int.TryParse(idStr, out id);
-                        if (isParseId)
-                        {
-                            var result = _employeeService.GetAllCount(id);
-                            if (result is null)
-                            {
-                                ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
-                                goto Id;
-                            }
-                            ConsoleColor.Green.WriteConsole($"Count: {result.Count}");
-                        }
-                        else
-                        {
-                            ConsoleColor.Red.WriteConsole("Please add correct id:");
-                            goto Id;
-                        }
+
+                        ConsoleColor.Green.WriteConsole($"{_employeeService.GetCount()}");
                     }
                     else
                     {
-                        ConsoleColor.Red.WriteConsole("You can not get all count of employees");
+                        ConsoleColor.Red.WriteConsole("Please create employee");
                     }
                     
                 }
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("You can not get all count of employees");
+                    ConsoleColor.Red.WriteConsole("Please create department");
                 }
 
             }
@@ -350,12 +342,12 @@ namespace CompanyApplication.Controller
                 {
                     if (AppDbContext<Employee>.datas.Count != 0)
                     {
-                        ConsoleColor.Magenta.WriteConsole("Please add employee name or surname:");
+                        ConsoleColor.Magenta.WriteConsole("Please enter employee name or surname:");
 
                         string searchText = Console.ReadLine();
-                        if (searchText!=null || searchText!=string.Empty)
+                        if (searchText!=string.Empty)
                         {
-                         var result = _employeeService.Search(searchText);
+                        var result = _employeeService.Search(searchText);
                         if (result.Count!=0)
                         {
                         foreach (var item in result)
@@ -370,17 +362,17 @@ namespace CompanyApplication.Controller
                         }
                         else
                         {
-                            ConsoleColor.Red.WriteConsole("You can not search");
+                            ConsoleColor.Red.WriteConsole("Not found.Please try again");
                         }
                     }
                     else
                     {
-                        ConsoleColor.Red.WriteConsole("You can not search");
+                        ConsoleColor.Red.WriteConsole("Please create employee");
                     }
                 }
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("You can not search");
+                    ConsoleColor.Red.WriteConsole("Please create department");
                 }
 
             }
@@ -420,13 +412,13 @@ namespace CompanyApplication.Controller
                     }
                     else
                     {
-                        ConsoleColor.Red.WriteConsole("You can not get employees by department name");
+                        ConsoleColor.Red.WriteConsole("Please create employee");
                     }
                     
                 }
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("You can not get employees by department name");
+                    ConsoleColor.Red.WriteConsole("Please create department");
                 }
 
             }
@@ -509,7 +501,7 @@ namespace CompanyApplication.Controller
                     if (AppDbContext<Employee>.datas.Count != 0)
                     {
                         ConsoleColor.Magenta.WriteConsole("Please enter employee id:");
-                    Id: string empIdStr = Console.ReadLine();
+                        Id: string empIdStr = Console.ReadLine();
                         int empId;
                         bool isParseId = int.TryParse(empIdStr, out empId);
                         if (!isParseId)
@@ -517,31 +509,71 @@ namespace CompanyApplication.Controller
                             ConsoleColor.Red.WriteConsole("Please enter correct id:");
                             goto Id;
                         }
+                        if (_employeeService.GetById(empId)==null)
+                        {
+                            ConsoleColor.Red.WriteConsole("Please enter correct id:");
+                            goto Id;
+                        }
                         ConsoleColor.Magenta.WriteConsole("Please enter new name of employee :");
-                        string newname = Console.ReadLine();
+                        NewName: string newname = Console.ReadLine();
+                        if (newname is null)
+                        {
+                            ConsoleColor.Red.WriteConsole("Name can not be empty ");
+                            goto NewName;
+                        }
+
+                        Regex regex = new Regex(@"[A-Z]{1}[a-z]*$");
+                        if (!regex.IsMatch(newname))
+                        {
+                            ConsoleColor.Red.WriteConsole("Try again");
+                            goto NewSurname;
+                        }
 
                         ConsoleColor.Magenta.WriteConsole("Please enter new surname of employee :");
-                        string newsurname = Console.ReadLine();
+                        NewSurname: string newsurname = Console.ReadLine();
+                        if (newsurname is null)
+                        {
+                            ConsoleColor.Red.WriteConsole("Surname can not be empty ");
+                            goto NewSurname;
+                        }
+                        
+                        if (!regex.IsMatch(newsurname))
+                        {
+                            ConsoleColor.Red.WriteConsole("Try again");
+                            goto NewSurname;
+                        }
 
                         ConsoleColor.Magenta.WriteConsole("Please enter new address of employee :");
-                        string newaddress = Console.ReadLine();
+                        NewAddress: string newaddress = Console.ReadLine();
+                        if (newaddress is null)
+                        {
+                            ConsoleColor.Red.WriteConsole("Address can not be empty ");
+                            goto NewAddress;
+                        }
 
                         ConsoleColor.Magenta.WriteConsole("Please enter new age of employee :");
-                    Age: string ageStr = Console.ReadLine();
+                        Age: string ageStr = Console.ReadLine();
                         int newage;
                         bool isParseAge = int.TryParse(ageStr, out newage);
-                        if (!isParseAge)
+                        if (!isParseAge && newage<18 && newage>65)
                         {
                             ConsoleColor.Red.WriteConsole("Please enter correct age:");
                             goto Age;
                         }
-                        ConsoleColor.Magenta.WriteConsole("Please enter new Id of employee :");
-                    DepId: string depIdStr = Console.ReadLine();
+                        ConsoleColor.Magenta.WriteConsole("Please enter new department id of employee :");
+                        DepId: string depIdStr = Console.ReadLine();
                         int newdepId;
                         bool isParseDepId = int.TryParse(depIdStr, out newdepId);
                         if (!isParseDepId)
                         {
-                            ConsoleColor.Red.WriteConsole("Please enter correct age:");
+                            ConsoleColor.Red.WriteConsole("Please enter correct id:");
+                            goto DepId;
+                        }
+                        var departmentCapacity = _departmentService.GetById(newdepId).Capacity;
+                        var employeedepartment = _employeeService.GetByDepartmentId(newdepId).Count;
+                        if (departmentCapacity <= employeedepartment)
+                        {
+                            ConsoleColor.Red.WriteConsole("Could not add employee to this department:");
                             goto DepId;
                         }
 
@@ -561,7 +593,7 @@ namespace CompanyApplication.Controller
                     }
                     else
                     {
-                        ConsoleColor.Red.WriteConsole("You can not update employee");
+                        ConsoleColor.Red.WriteConsole("Please create employee");
                     }
                 }
                     catch (Exception ex) 
@@ -571,7 +603,7 @@ namespace CompanyApplication.Controller
                     }
                     else
                     {
-                       ConsoleColor.Red.WriteConsole("You can not update employee");
+                       ConsoleColor.Red.WriteConsole("Please create department");
                     }
                  }
                    

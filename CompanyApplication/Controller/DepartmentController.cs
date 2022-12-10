@@ -29,7 +29,7 @@ namespace CompanyApplication.Controller
                     ConsoleColor.Red.WriteConsole("Department name can not be empty:");
                     goto DepName;
                 }
-                Regex regex = new Regex(@"^[A-z ,.'-A-Za-z]+$");
+                Regex regex = new Regex(@"[A-Z]{1}[a-z]*$");
                 if (!regex.IsMatch(name))
                 {
                     ConsoleColor.Red.WriteConsole("Please try again");
@@ -163,7 +163,7 @@ namespace CompanyApplication.Controller
                     ConsoleColor.Magenta.WriteConsole("Please add department name:");
 
                     string searchText = Console.ReadLine();
-                    if (searchText != null || searchText != string.Empty)
+                    if (searchText != string.Empty)
                     {
                         var result = _departmentService.Search(searchText);
                         if (result.Count != 0)
@@ -178,7 +178,6 @@ namespace CompanyApplication.Controller
                             ConsoleColor.Red.WriteConsole("Not found.Please try again");
                         }
                     }
-
                     else
                     {
                         ConsoleColor.Red.WriteConsole("Not found.Please try again");
@@ -208,34 +207,10 @@ namespace CompanyApplication.Controller
             {
                 try
                 {
-
-                    ConsoleColor.Magenta.WriteConsole("Please add department Id:");
-                    Id: string idStr = Console.ReadLine();
-                    int id;
-                    bool isParseId = int.TryParse(idStr, out id);
-                    if (isParseId)
+                    foreach (var item in _departmentService.GetAll())
                     {
-                        var result = _departmentService.GetAll();
-                        if (result is null)
-                        {
-                            ConsoleColor.Red.WriteConsole("Not Found.Please try again:");
-                            goto Id;
-                        }
-                        else
-                        {
-                            foreach (var item in result)
-                            {
-                                ConsoleColor.Green.WriteConsole($"Id: {item.Id}, Department Name: {item.Name}, Department Capacity: {item.Capacity}");
-                            }
-                        }
+                        ConsoleColor.Green.WriteConsole($"Id: {item.Id}, Department Name: {item.Name}, Department Capacity: {item.Capacity}");
                     }
-                    else
-                    {
-                        ConsoleColor.Red.WriteConsole("Please add correct id:");
-                        goto Id;
-                    }
-
-
                 }
                 catch (Exception ex)
                 {
@@ -248,9 +223,6 @@ namespace CompanyApplication.Controller
                 ConsoleColor.Red.WriteConsole("Please create department");
             }
             
-
-
-
 
         }
 
@@ -266,15 +238,30 @@ namespace CompanyApplication.Controller
                     Id: string depIdStr = Console.ReadLine();
                     int depId;
                     bool isParseDepId = int.TryParse(depIdStr, out depId);
+
                     if (!isParseDepId)
                     {
                         ConsoleColor.Red.WriteConsole("Please add correct id:");
                         goto Id;
                     }
-
+                    if (_departmentService.GetById(depId)==null)
+                    {
+                        ConsoleColor.Red.WriteConsole("Please add correct id:");
+                        goto Id;
+                    }                     
                     ConsoleColor.Magenta.WriteConsole("Please enter new name of department :");
-                    string newname = Console.ReadLine();
-
+                    NewName: string newname = Console.ReadLine();
+                    if (newname is "" || newname == null)
+                    {
+                        ConsoleColor.Red.WriteConsole("Department name can not be empty:");
+                        goto NewName;
+                    }
+                    Regex regex = new Regex(@"[A-Z]{1}[a-z]*$");
+                    if (!regex.IsMatch(newname))
+                    {
+                        ConsoleColor.Red.WriteConsole("Try again");
+                        goto NewName;
+                    }
                     ConsoleColor.Magenta.WriteConsole("Please enter new capacity of department :");
                     Capacity: string updCapacityStr = Console.ReadLine();
                     int newUpdCapacity;
@@ -287,7 +274,6 @@ namespace CompanyApplication.Controller
                     }             
                   
                     Department newdepartment = new()
-
                     {
                         Name = newname,
                         Capacity = newUpdCapacity

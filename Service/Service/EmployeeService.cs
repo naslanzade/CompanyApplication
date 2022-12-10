@@ -45,16 +45,9 @@ namespace Service.Service
             return _repo.GetAll(m=>m.Department.Name.ToLower().Contains(searchText.ToLower()));
         }
 
-        public List<Employee> GetAllCount(int id)
+        public int GetCount()
         {
-            if (id == null) throw new ArgumentNullException();
-
-            int count = 0;
-            for (int i = id; i <= id; i++)
-            {
-                 count++;
-            }
-            return _repo.GetAll();
+            return _repo.GetAll(null).Count;
         }
 
         public List<Employee> GetByAge(int? age)
@@ -77,11 +70,7 @@ namespace Service.Service
 
         public List<Employee> Search(string searchText)
         {
-            if (searchText == null || searchText == string.Empty)
-            {
-                ConsoleColor.Red.WriteConsole("Not found.Please try again");
-            }
-            return _repo.GetAll(m => m.Name.ToLower().Contains(searchText.ToLower()) ||m.Surname.ToLower().Contains(searchText.ToLower()));
+           return _repo.GetAll(m => m.Name.ToLower().Contains(searchText.ToLower()) ||m.Surname.ToLower().Contains(searchText.ToLower()));
             
         }
 
