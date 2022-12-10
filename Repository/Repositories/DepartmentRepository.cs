@@ -36,8 +36,22 @@ namespace Repository.Repositories
 
             if (newEntity == null) throw new ArgumentNullException();
             Department department=Get(m=>m.Id==newEntity.Id);
-            department.Name = newEntity.Name;
-            department.Capacity = newEntity.Capacity;
+            if (string.IsNullOrEmpty(newEntity.Name) && newEntity.Capacity == 0)
+            {
+                Department department1= new Department();
+                {
+                    department1.Name = department.Name;
+                    department1.Capacity = department.Capacity;
+
+                }
+                
+            }
+            else
+            {
+                department.Name = newEntity.Name;
+                department.Capacity = newEntity.Capacity;
+            }
+            
             
 
         }

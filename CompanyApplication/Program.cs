@@ -93,7 +93,7 @@ while (true)
 
 static void GetMenus()
 {
-    ConsoleColor.Blue.WriteConsole("Select one option:");
+    ConsoleColor.Cyan.WriteConsole("Select one option:");
     Console.WriteLine("...................");
     ConsoleColor.Blue.WriteConsole("Department options: 1 - Create, 2 - Get By Id, 3 - Delete, 4 - Search, 5 - Get All Departments, 6 - Update");
     Console.WriteLine("...................");

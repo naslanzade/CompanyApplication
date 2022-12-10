@@ -162,7 +162,7 @@ namespace CompanyApplication.Controller
                 {
                     ConsoleColor.Magenta.WriteConsole("Please add department name:");
 
-                    string searchText = Console.ReadLine();
+                    SearchText: string searchText = Console.ReadLine();
                     if (searchText != string.Empty)
                     {
                         var result = _departmentService.Search(searchText);
@@ -176,11 +176,13 @@ namespace CompanyApplication.Controller
                         else
                         {
                             ConsoleColor.Red.WriteConsole("Not found.Please try again");
+                            goto SearchText;
                         }
                     }
                     else
                     {
                         ConsoleColor.Red.WriteConsole("Not found.Please try again");
+                        goto SearchText;
                     }
 
                 }
@@ -191,10 +193,10 @@ namespace CompanyApplication.Controller
 
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                ConsoleColor.Red.WriteConsole(ex.Message);
             }
         }
 
