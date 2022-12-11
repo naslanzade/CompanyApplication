@@ -56,7 +56,6 @@ namespace CompanyApplication.Controller
                     ConsoleColor.Red.WriteConsole("Please add correct capacity");
                     goto Capacity;
                 }
-
             }
             catch (Exception ex)
             {
