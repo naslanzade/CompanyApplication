@@ -66,8 +66,6 @@ while (true)
             case 15:
                 employeeController.Update();
                 break;
-
-
             default:
                 ConsoleColor.Red.WriteConsole("Please select correct option:");
                 goto SelectOption;                         
@@ -95,7 +93,22 @@ static void GetMenus()
 {
     ConsoleColor.Cyan.WriteConsole("Select one option:");
     Console.WriteLine("...................");
-    ConsoleColor.Blue.WriteConsole("Department options: 1 - Create, 2 - Get By Id, 3 - Delete, 4 - Search, 5 - Get All Departments, 6 - Update");
+    ConsoleColor.DarkCyan.WriteConsole("Department options:\n" +
+        "1 - Create\n"+
+        "2 - Get By Id\n"+ 
+        "3 - Delete\n"+
+        "4 - Search\n"+
+        "5 - Get All Departments\n"+
+        "6 - Update\n");
     Console.WriteLine("...................");
-    ConsoleColor.Blue.WriteConsole("Employee options:7-Create, 8- Get employee by id, 9 - Delete, 10 -  Get employees by age, 11 - Get all emloyees count,12 - Search,13 - Get all employees by departmentName, 14 - Get employees by departmentId, 15 - Update");
+    ConsoleColor.DarkCyan.WriteConsole("Employee options:\n" + 
+        "7 - Create\n"+
+        "8 - Get employee by id\n"+
+        "9 - Delete\n"+
+        "10 - Get employees by age\n"+
+        "11 - Get all emloyees count\n"+
+        "12 - Search\n"+
+        "13 - Get all employees by departmentName\n"+
+        "14 - Get employees by departmentId\n"+
+        "15 - Update\n");
 }

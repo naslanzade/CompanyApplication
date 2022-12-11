@@ -29,29 +29,27 @@ namespace Repository.Repositories
         {
             return predicate==null ? AppDbContext<Department>.datas:AppDbContext<Department>.datas.FindAll(predicate);
         }
-
-       
+               
         public void Update(Department newEntity)
         {
 
             if (newEntity == null) throw new ArgumentNullException();
             Department department=Get(m=>m.Id==newEntity.Id);
-            if (string.IsNullOrEmpty(newEntity.Name) && newEntity.Capacity == 0)
-            {
-                Department department1= new Department();
-                {
-                    department1.Name = department.Name;
-                    department1.Capacity = department.Capacity;
-
-                }
-            }
-            else
+            if (!string.IsNullOrEmpty(newEntity.Name))
             {
                 department.Name = newEntity.Name;
+            }
+            if (newEntity.Capacity!=0)
+            {
                 department.Capacity = newEntity.Capacity;
             }
             
             
+
+
+
+
+
 
         }
 

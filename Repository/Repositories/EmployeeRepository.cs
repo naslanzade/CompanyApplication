@@ -39,11 +39,31 @@ namespace Repository.Repositories
             if (newEmployee == null) throw new ArgumentNullException();
 
             Employee employee=Get(m=>m.Id==newEmployee.Id);
-            employee.Name = newEmployee.Name;
-            employee.Surname = newEmployee.Surname;
-            employee.Address = newEmployee.Address;
-            employee.Age = newEmployee.Age;
-            employee.Department.Id = newEmployee.Department.Id;
+            if (!string.IsNullOrEmpty(newEmployee.Name))
+            {
+                employee.Name = newEmployee.Name;
+            }
+            if (!string.IsNullOrEmpty(newEmployee.Surname))
+            {
+                employee.Surname = newEmployee.Surname;
+            }
+            if (!string.IsNullOrEmpty(newEmployee.Address))
+            {
+                employee.Address = newEmployee.Address;
+            }
+            if (newEmployee.Age!=0)
+            {
+                employee.Age = newEmployee.Age;
+            }
+            if (newEmployee.Department.Id!=null)
+            {
+                employee.Department.Id = newEmployee.Department.Id;
+            }
+            
+            
+            
+            
+            
           
         }
     }
