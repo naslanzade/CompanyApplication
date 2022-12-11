@@ -270,11 +270,16 @@ namespace CompanyApplication.Controller
                     int newUpdCapacity;
                     bool isParseUpdCapacity = int.TryParse(updCapacityStr, out newUpdCapacity);
 
-                    if (newUpdCapacity==0)
+                    if (newUpdCapacity==0 )
                     {
                         goto Department;
                     }
-                    if (!isParseUpdCapacity && newUpdCapacity>0)
+                    if (!isParseUpdCapacity)
+                    {
+                        ConsoleColor.Red.WriteConsole("Please add correct capacity:");
+                        goto Capacity;
+                    }
+                    if (newUpdCapacity<0)
                     {
                         ConsoleColor.Red.WriteConsole("Please add correct capacity:");
                         goto Capacity;
